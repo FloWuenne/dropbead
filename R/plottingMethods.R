@@ -75,13 +75,13 @@ setGeneric("plotCumulativeFractionOfReads",
 setMethod("plotCumulativeFractionOfReads",
           "data.frame",
           function(object, cutoff, draw.infl.point) {
-            df <- data.frame("cum"=cumsum(object[1:cutoff, 1])/max(cumsum(object[1:cutoff, 1])),
-                             "cells"=1:cutoff)
+            df <- data.frame("cum"=cumsum(object[1:nrow(object), 1])/max(cumsum(object[1:nrow(object), 1])),
+                             "cells"=1:nrow(object))
 
             infl.point <- findInflectionPoint(object[1:cutoff, 1], max.cells=cutoff, n=1)
 
             g <- (ggplot(df, aes(cells, cum)) + geom_line(col="steelblue", size=1.25) + theme_minimal()
-            + scale_x_continuous(expand=c(0.015, 0))
+            + scale_x_continuous(expand=c(0.015, 0), limits=c(0,cutoff))
             + scale_y_continuous(expand = c(0.01, 0)) + ylab("Cumulative fraction of reads")
             + xlab("Cell barcodes (descending number of reads)")
             + theme(text=element_text(size=24),
